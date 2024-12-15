@@ -1,12 +1,13 @@
 import tkinter as tk
 from tktimepicker import AnalogPicker, AnalogThemes
 from alarm import curent_hour
+import config as conf
 
 
 # Fonction pour récupérer la saisie et l'afficher
 def recuperer_saisie():
-    alarm_hour = time_picker.time()
-    label_resultat.config(text=f"Vous avez saisi : {alarm_hour}")
+    alarm_hour = conf.time_picker.time()
+    conf.label_resultat.config(text=f"Vous avez saisi : {alarm_hour}")
     print(alarm_hour)
     return alarm_hour
 
@@ -27,14 +28,14 @@ def main_window():
 
 def alarm_picker():
     fenetre2 = tk.Tk()
-    global time_picker 
     time_picker = AnalogPicker(fenetre2)
+    conf.time_picker = time_picker
     time_picker.pack(expand=True, fill="both")
     theme = AnalogThemes(time_picker)
     theme.setDracula()
     # Ajout d'un label pour afficher le résultat
-    global label_resultat 
     label_resultat = tk.Label(fenetre2, text="")
+    conf.label_resultat = label_resultat
     label_resultat.pack(pady=10)
     # Ajout d'un bouton pour valider la saisie
     bouton = tk.Button(fenetre2, text="Valider", command=recuperer_saisie)
