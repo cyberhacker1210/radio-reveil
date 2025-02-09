@@ -1,6 +1,6 @@
 from datetime import datetime
-import config as conf
 import pygame
+import config as conf
 
 def curent_hour():
     curent_date = datetime.now()
@@ -16,13 +16,20 @@ def day():
 
 def sound():
     pygame.mixer.init()
-    sound = pygame.mixer.Sound("./reveil_sound.mp3")
-    pygame.mixer.music.load(sound)
-    duration = sound.get_length() * 1000
-    conf.fenetre.after(duration, lambda: sound)
+    user_sound = pygame.mixer.Sound("./reveil_sound.mp3")
+    pygame.mixer.music.load("./reveil_sound.mp3")
+    pygame.mixer.music.play()
+    duration = int(user_sound.get_length() * 1000)
+
+    if conf.say_stop == False:
+        conf.fenetre.after(duration, lambda: sound())
+    else:
+        stop_sound()
+        conf.say_stop = False
 
 def stop_sound():
     pygame.mixer.music.stop()
+    conf.say_stop = True 
 
 
 

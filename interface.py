@@ -1,4 +1,5 @@
 import tkinter as tk
+#import customtkinter as ctk
 from tktimepicker import AnalogPicker, AnalogThemes
 from alarm import curent_hour, check_alarm, stop_sound
 import config as conf
@@ -45,28 +46,33 @@ def resize_label(event):
     conf.label_hour.config(font=("Helvetica", font_size))
     button_font_size = int(min(width, height) * 0.1)
     conf.bouton_alarm.config(font=("Helvetica", button_font_size))
+    conf.bouton_sound.config(font=("Helvetica", button_font_size))
 
 
 def main_window():
     # Création de la fenêtre principale
     conf.fenetre = tk.Tk()
-    conf.fenetre.geometry("400x200")
+    conf.fenetre.geometry("450x200")
     conf.fenetre.title("radio reveil")
-    conf.label_hour = tk.Label(conf.fenetre, text=curent_hour())
+    conf.fenetre.configure(bg="#222831")
+
+    conf.label_hour = tk.Label(conf.fenetre, text=curent_hour(), font=("Arial", 40, "bold"), bg="#222831", fg="#FFD369")
     conf.label_hour.pack(fill="both", expand=True)
-    conf.bouton_alarm = tk.Button(conf.fenetre, text ="set alarm", command=alarm_picker)
-    conf.bouton_alarm.pack(pady=5)
+
+    frame_buttons = tk.Frame(conf.fenetre, bg="#222831")
+    frame_buttons.pack(pady=10)
+
+    conf.bouton_alarm = tk.Button(frame_buttons, text="⏰ Regler l'alarme", command=alarm_picker, font=("Arial", 12), bd=2, width=15)
+    conf.bouton_alarm.pack(side="left", padx=10, pady=5)
+
+    conf.bouton_sound = tk.Button(frame_buttons, text="🔇 Arreter le son", command=stop_sound, font=("Arial", 12), bd=2, width=15)
+    conf.bouton_sound.pack(side="right", padx=10, pady=5)
+
     update_label()
     conf.fenetre.bind("<Configure>", resize_label)
     conf.fenetre.mainloop()
 
-    # Lancement de l'application
 
-
-def sound_windows():
-    conf.sound_windows = tk.Toplevel(conf.fenetre)
-    bouton = tk.Button(conf.sound_windows, text="areter le son", command=stop_sound)
-    bouton.pack(pady=5)
 
 def alarm_picker():
     conf.fenetre2 = tk.Toplevel(conf.fenetre)
