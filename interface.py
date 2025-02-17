@@ -51,7 +51,7 @@ def resize_label(event):
 def main_window():
     # Création de la fenêtre principale
     conf.fenetre = tk.Tk()
-    conf.fenetre.geometry("800x400")
+    conf.fenetre.attributes("-fullscreen", True)
     conf.fenetre.title("radio reveil")
     conf.fenetre.configure(bg="#222831")
 
