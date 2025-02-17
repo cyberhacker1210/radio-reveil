@@ -48,11 +48,10 @@ def resize_label(event):
     conf.bouton_alarm.config(font=("Helvetica", button_font_size))
     conf.bouton_sound.config(font=("Helvetica", button_font_size))
 
-
 def main_window():
     # Création de la fenêtre principale
     conf.fenetre = tk.Tk()
-    conf.fenetre.geometry("450x200")
+    conf.fenetre.geometry("800x400")
     conf.fenetre.title("radio reveil")
     conf.fenetre.configure(bg="#222831")
 
@@ -60,13 +59,14 @@ def main_window():
     conf.label_hour.pack(fill="both", expand=True)
 
     frame_buttons = tk.Frame(conf.fenetre, bg="#222831")
-    frame_buttons.pack(pady=10)
+    frame_buttons.pack(pady=10, fill="x")  # Remarque l'ajout de `fill="x"` pour étendre horizontalement les boutons
 
-    conf.bouton_alarm = tk.Button(frame_buttons, text="⏰ Regler l'alarme", command=alarm_picker, font=("Arial", 12), bd=2, width=15)
-    conf.bouton_alarm.pack(side="left", padx=10, pady=5)
+    # Ne plus spécifier `width=20`, utiliser juste `fill="both"` pour un redimensionnement flexible
+    conf.bouton_alarm = tk.Button(frame_buttons, text="⏰ Regler l'alarme", command=alarm_picker, font=("Arial", 12), bd=2)
+    conf.bouton_alarm.pack(side="left", padx=10, pady=5, fill="both", expand=True)
 
-    conf.bouton_sound = tk.Button(frame_buttons, text="🔇 Arreter le son", command=stop_sound, font=("Arial", 12), bd=2, width=15)
-    conf.bouton_sound.pack(side="right", padx=10, pady=5)
+    conf.bouton_sound = tk.Button(frame_buttons, text="🔇 Arreter le son", command=stop_sound, font=("Arial", 12), bd=2)
+    conf.bouton_sound.pack(side="right", padx=10, pady=5, fill="both", expand=True)
 
     update_label()
     conf.fenetre.bind("<Configure>", resize_label)
