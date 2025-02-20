@@ -49,8 +49,10 @@ def resize_label(event):
     conf.bouton_sound.config(font=("Helvetica", button_font_size))
 
 def main_window():
+
     # Création de la fenêtre principale
     conf.fenetre = tk.Tk()
+    conf.fenetre.geometry(f"{conf.fenetre.winfo_screenwidth()}x{conf.fenetre.winfo_screenheight()}+0+0")
     conf.fenetre.attributes("-fullscreen", True)
     conf.fenetre.title("radio reveil")
     conf.fenetre.configure(bg="#222831")
