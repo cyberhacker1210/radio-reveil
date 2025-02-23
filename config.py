@@ -6,3 +6,5 @@ label_hour = None
 bouton_alarm = None
 bouton_sound = None
 say_stop = False
+bouton_close = None
+bouton_settings = None

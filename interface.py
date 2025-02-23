@@ -1,11 +1,14 @@
 import tkinter as tk
-#import customtkinter as ctk
+import customtkinter as ctk
 from tktimepicker import AnalogPicker, AnalogThemes
 from alarm import curent_hour, check_alarm, stop_sound
+from tkinter import PhotoImage
 import config as conf
 
 
 # Fonction pour récupérer la saisie et l'afficher
+ctk.set_appearance_mode("dark")  # "light" ou "dark"
+ctk.set_default_color_theme("blue")  # "green", "dark-blue"
 def recuperer_saisie():
     alarm_hour = str(conf.time_picker.time())
     conf.label_resultat.config(text=f"Vous avez saisi : {alarm_hour}")
@@ -44,35 +47,53 @@ def resize_label(event):
     # Adapter la taille de la police en fonction de la largeur
     font_size = int(min(width, height) * 0.3)  # 5% de la taille minimale
     conf.label_hour.config(font=("Helvetica", font_size))
-    button_font_size = int(min(width, height) * 0.1)
-    conf.bouton_alarm.config(font=("Helvetica", button_font_size))
-    conf.bouton_sound.config(font=("Helvetica", button_font_size))
 
 def main_window():
-
-    # Création de la fenêtre principale
     conf.fenetre = tk.Tk()
-    conf.fenetre.geometry(f"{conf.fenetre.winfo_screenwidth()}x{conf.fenetre.winfo_screenheight()}+0+0")
-    conf.fenetre.attributes("-fullscreen", True)
+    conf.fenetre.geometry(f"900x600")
     conf.fenetre.title("radio reveil")
     conf.fenetre.configure(bg="#222831")
 
     conf.label_hour = tk.Label(conf.fenetre, text=curent_hour(), font=("Arial", 40, "bold"), bg="#222831", fg="#FFD369")
     conf.label_hour.pack(fill="both", expand=True)
-
-    frame_buttons = tk.Frame(conf.fenetre, bg="#222831")
-    frame_buttons.pack(pady=10, fill="x")  # Remarque l'ajout de `fill="x"` pour étendre horizontalement les boutons
-
-    # Ne plus spécifier `width=20`, utiliser juste `fill="both"` pour un redimensionnement flexible
-    conf.bouton_alarm = tk.Button(frame_buttons, text="⏰ Regler l'alarme", command=alarm_picker, font=("Arial", 12), bd=2)
-    conf.bouton_alarm.pack(side="left", padx=10, pady=5, fill="both", expand=True)
-
-    conf.bouton_sound = tk.Button(frame_buttons, text="🔇 Arreter le son", command=stop_sound, font=("Arial", 12), bd=2)
-    conf.bouton_sound.pack(side="right", padx=10, pady=5, fill="both", expand=True)
-
+    conf.label_hour.bind("<Button-1>", lambda event: settings())
     update_label()
     conf.fenetre.bind("<Configure>", resize_label)
     conf.fenetre.mainloop()
+
+def settings():
+    conf.fenetre3 = ctk.CTkToplevel(conf.fenetre)
+    conf.fenetre3.title("Settings")
+    conf.fenetre3.configure(bg="#222831")
+
+    # Définir le style du bouton global
+    button_style = {
+        "font": ("Arial", 12),
+        "corner_radius": 20,
+        "fg_color": "#444",  # Couleur de fond (gris foncé)
+        "hover_color": "#555",  # Couleur au survol (plus claire)
+    }
+
+    # Appliquer ce style à tous les boutons
+    conf.bouton_sound = ctk.CTkButton(
+        conf.fenetre3, text="🔊 Stop sound",
+        command=stop_sound, **button_style
+    )
+    conf.bouton_sound.pack(side="left", padx=10, pady=5, fill="both", expand=True)
+
+    conf.bouton_alarm = ctk.CTkButton(
+        conf.fenetre3, text="⏰ Set Alarm",
+        command=alarm_picker, **button_style
+    )
+    conf.bouton_alarm.pack(side="left", padx=10, pady=5, fill="both", expand=True)
+
+    conf.bouton_close = ctk.CTkButton(
+        conf.fenetre3, text="close settings",
+        command=lambda: close_fenetre(conf.fenetre3), **button_style
+    )
+    conf.bouton_close.pack(side="left", padx=10, pady=5, fill="both", expand=True)
+
+    conf.fenetre3.mainloop()
 
 
 
