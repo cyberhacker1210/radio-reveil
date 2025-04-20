@@ -103,7 +103,7 @@ def alarm_picker():
     conf.fenetre2 = tk.Toplevel(conf.fenetre)
     time_picker = AnalogPicker(conf.fenetre2)
     conf.time_picker = time_picker
-    time_picker.pack(expand=True, fill="both")
+    time_picker.place(relx=0.5, rely=0.5, anchor="center", width=300, height=300)
     theme = AnalogThemes(time_picker)
     theme.setDracula()
     # Ajout d'un label pour afficher le résultat
