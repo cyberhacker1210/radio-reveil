@@ -78,13 +78,13 @@ def settings():
 
     # Appliquer ce style à tous les boutons
     conf.bouton_sound = ctk.CTkButton(
-        conf.fenetre3, text="🔊 Stop sound",
+        conf.fenetre3, text=" Stop sound",
         command=stop_sound, **button_style
     )
     conf.bouton_sound.pack(side="left", padx=10, pady=5, fill="both", expand=True)
 
     conf.bouton_alarm = ctk.CTkButton(
-        conf.fenetre3, text="⏰ Set Alarm",
+        conf.fenetre3, text=" Set Alarm",
         command=alarm_picker, **button_style
     )
     conf.bouton_alarm.pack(side="left", padx=10, pady=5, fill="both", expand=True)
