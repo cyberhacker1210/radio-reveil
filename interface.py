@@ -103,43 +103,49 @@ def alarm_picker():
     conf.fenetre2 = tk.Toplevel(conf.fenetre)
     conf.fenetre2.title("Sélecteur d'heure")
 
-    # Taille de l'écran
     screen_width = conf.fenetre.winfo_screenwidth()
     screen_height = conf.fenetre.winfo_screenheight()
 
-    # Conteneur pour le picker
-    frame_picker = tk.Frame(conf.fenetre2)
-    frame_picker.pack(padx=10, pady=10)
+    # Canvas sans scrollbars visibles
+    canvas = tk.Canvas(conf.fenetre2, width=screen_width, height=screen_height)
+    canvas.pack(fill=tk.BOTH, expand=True)
 
-    time_picker = AnalogPicker(frame_picker)
+    frame = tk.Frame(canvas)
+    canvas.create_window((0, 0), window=frame, anchor='nw')
+
+    # Ajouter le contenu dans le frame
+    time_picker = AnalogPicker(frame)
     conf.time_picker = time_picker
-    time_picker.pack()
+    time_picker.pack(pady=10)
 
     theme = AnalogThemes(time_picker)
     theme.setDracula()
 
-    label_resultat = tk.Label(conf.fenetre2, text="")
+    label_resultat = tk.Label(frame, text="")
     conf.label_resultat = label_resultat
     label_resultat.pack(pady=10)
 
-    bouton = tk.Button(conf.fenetre2, text="Valider", command=recuperer_saisie)
+    bouton = tk.Button(frame, text="Valider", command=recuperer_saisie)
     bouton.pack(pady=5)
 
-    # Mise à jour pour récupérer la taille demandée par la fenêtre
-    conf.fenetre2.update_idletasks()
-    win_width = conf.fenetre2.winfo_reqwidth()
-    win_height = conf.fenetre2.winfo_reqheight()
+    # Ajuster la région scrollable
+    def update_scrollregion(event=None):
+        canvas.configure(scrollregion=canvas.bbox("all"))
 
-    # Limiter la taille à celle de l’écran si nécessaire
-    max_width = min(win_width, screen_width)
-    max_height = min(win_height, screen_height)
+    frame.bind("<Configure>", update_scrollregion)
 
-    # Centrer la fenêtre dans l'écran
-    pos_x = (screen_width // 2) - (max_width // 2)
-    pos_y = (screen_height // 2) - (max_height // 2)
+    # --- Gestion du scroll au doigt ---
+    def start_scroll(event):
+        canvas.scan_mark(event.x, event.y)
 
-    conf.fenetre2.geometry(f"{max_width}x{max_height}+{pos_x}+{pos_y}")
-    conf.fenetre2.resizable(False, False)
+    def scroll_move(event):
+        canvas.scan_dragto(event.x, event.y, gain=1)
+
+    canvas.bind("<ButtonPress-1>", start_scroll)
+    canvas.bind("<B1-Motion>", scroll_move)
+
+    conf.fenetre2.resizable(True, True)
+
 
 
 
