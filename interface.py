@@ -103,7 +103,11 @@ def alarm_picker():
     conf.fenetre2 = tk.Toplevel(conf.fenetre)
     conf.fenetre2.title("Sélecteur d'heure")
 
-    # Crée un conteneur pour centrer proprement l'AnalogPicker
+    # Taille de l'écran
+    screen_width = conf.fenetre.winfo_screenwidth()
+    screen_height = conf.fenetre.winfo_screenheight()
+
+    # Conteneur pour le picker
     frame_picker = tk.Frame(conf.fenetre2)
     frame_picker.pack(padx=10, pady=10)
 
@@ -114,18 +118,27 @@ def alarm_picker():
     theme = AnalogThemes(time_picker)
     theme.setDracula()
 
-    # Ajout d'un label pour afficher le résultat
     label_resultat = tk.Label(conf.fenetre2, text="")
     conf.label_resultat = label_resultat
     label_resultat.pack(pady=10)
 
-    # Ajout d'un bouton pour valider la saisie
     bouton = tk.Button(conf.fenetre2, text="Valider", command=recuperer_saisie)
     bouton.pack(pady=5)
 
-    # Mise à jour des dimensions de la fenêtre après ajout des widgets
+    # Mise à jour pour récupérer la taille demandée par la fenêtre
     conf.fenetre2.update_idletasks()
-    conf.fenetre2.geometry(f"{conf.fenetre2.winfo_reqwidth()}x{conf.fenetre2.winfo_reqheight()}")
+    win_width = conf.fenetre2.winfo_reqwidth()
+    win_height = conf.fenetre2.winfo_reqheight()
+
+    # Limiter la taille à celle de l’écran si nécessaire
+    max_width = min(win_width, screen_width)
+    max_height = min(win_height, screen_height)
+
+    # Centrer la fenêtre dans l'écran
+    pos_x = (screen_width // 2) - (max_width // 2)
+    pos_y = (screen_height // 2) - (max_height // 2)
+
+    conf.fenetre2.geometry(f"{max_width}x{max_height}+{pos_x}+{pos_y}")
     conf.fenetre2.resizable(False, False)
 
 
