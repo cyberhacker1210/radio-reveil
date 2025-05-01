@@ -17,7 +17,7 @@ from datetime import datetime
 
 # === Fonctions de gestion de l'heure ===
 def curent_hour():
-    return datetime.now().strftime("%I:%M %p")
+    return datetime.now().strftime("  %I:%M %p  ")
 
 def check_alarm(alarm_time):
     print(f"[Alarm] Checking alarm for {alarm_time}")
