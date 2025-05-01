@@ -100,41 +100,62 @@ def settings():
 
 
 def alarm_picker():
-    conf.fenetre2 = tk.Toplevel(conf.fenetre)
+    conf.fenetre2 = ctk.CTkToplevel(conf.fenetre)
     conf.fenetre2.title("Sélecteur d'heure")
 
     screen_width = conf.fenetre.winfo_screenwidth()
     screen_height = conf.fenetre.winfo_screenheight()
 
-    # Canvas sans scrollbars visibles
-    canvas = tk.Canvas(conf.fenetre2, width=screen_width, height=screen_height)
+    fond_sombre = "#282a36"
+    texte_clair = "#f8f8f2"
+
+    # Canvas CustomTkinter (via tkinter)
+    canvas = tk.Canvas(conf.fenetre2, width=screen_width, height=screen_height, bg=fond_sombre, highlightthickness=0, bd=0)
     canvas.pack(fill=tk.BOTH, expand=True)
 
-    frame = tk.Frame(canvas)
+    # Frame intérieure
+    frame = ctk.CTkFrame(canvas, fg_color=fond_sombre)
     canvas.create_window((0, 0), window=frame, anchor='nw')
 
-    # Ajouter le contenu dans le frame
+    # AnalogPicker (supposé toujours en Tkinter standard)
     time_picker = AnalogPicker(frame)
     conf.time_picker = time_picker
-    time_picker.pack(pady=10)
+    time_picker.pack(pady=20)
 
     theme = AnalogThemes(time_picker)
     theme.setDracula()
 
-    label_resultat = tk.Label(frame, text="")
+    # Label résultat
+    label_resultat = ctk.CTkLabel(
+        frame,
+        text="",
+        text_color=texte_clair,
+        font=ctk.CTkFont("Helvetica", 16)
+    )
     conf.label_resultat = label_resultat
     label_resultat.pack(pady=10)
 
-    bouton = tk.Button(frame, text="Valider", command=recuperer_saisie)
-    bouton.pack(pady=5)
+    # Bouton arrondi CustomTkinter
+    bouton = ctk.CTkButton(
+        frame,
+        text="Valider",
+        command=recuperer_saisie,
+        fg_color="#6272a4",         # Violet Dracula
+        hover_color="#44475a",
+        text_color=texte_clair,
+        corner_radius=15,
+        font=ctk.CTkFont("Helvetica", 14, weight="bold"),
+        width=150,
+        height=40
+    )
+    bouton.pack(pady=10)
 
-    # Ajuster la région scrollable
+    # Scroll adaptatif
     def update_scrollregion(event=None):
         canvas.configure(scrollregion=canvas.bbox("all"))
 
     frame.bind("<Configure>", update_scrollregion)
 
-    # --- Gestion du scroll au doigt ---
     def start_scroll(event):
         canvas.scan_mark(event.x, event.y)
 
@@ -145,6 +166,8 @@ def alarm_picker():
     canvas.bind("<B1-Motion>", scroll_move)
 
     conf.fenetre2.resizable(True, True)
+
+
 
 
 
