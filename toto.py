@@ -1,4 +1,9 @@
 # kivy_radio_reveil.py
+from kivy.config import Config
+
+# Avant de faire from kivy.app import App
+Config.set('graphics', 'fullscreen', '1')  # ou 'auto'
+Config.set('graphics', 'resizable', False)
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -9,7 +14,6 @@ from kivy.core.window import Window
 from datetime import datetime
 
 # Fullscreen et sans bord
-Window.fullscreen = False
 
 # === Fonctions de gestion de l'heure ===
 def curent_hour():
