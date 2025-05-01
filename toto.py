@@ -32,7 +32,7 @@ class ClockScreen(Screen):
         self.layout = BoxLayout(orientation='vertical', padding=50, spacing=20)
 
         self.label_hour = Label(
-            text=curent_hour(),
+            text = "   " + curent_hour() + "    ",
             font_size='120sp',
             color=(1, 0.84, 0.41, 1)  # Jaune pastel
         )
