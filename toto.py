@@ -9,7 +9,7 @@ from kivy.core.window import Window
 from datetime import datetime
 
 # Fullscreen et sans bord
-Window.fullscreen = True
+Window.fullscreen = False
 
 # === Fonctions de gestion de l'heure ===
 def curent_hour():
