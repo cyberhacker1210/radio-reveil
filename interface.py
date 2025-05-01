@@ -60,7 +60,7 @@ def main_window():
     # Simuler plein écran sans déborder
     conf.fenetre.geometry(f"{screen_width}x{screen_height}+0+0")
     conf.fenetre.overrideredirect(True)  # Retire la barre de titre
-    conf.fenetre.attributes("-topmost", True)  # Toujours au-dessus
+    #conf.fenetre.attributes("-topmost", True)  # Toujours au-dessus
 
     conf.fenetre.title("radio reveil")
     conf.fenetre.configure(bg="#222831")
