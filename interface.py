@@ -52,17 +52,30 @@ def resize_label(event):
 
 def main_window():
     conf.fenetre = tk.Tk()
-    conf.fenetre.attributes("-topmost", True)
-    conf.fenetre.attributes("-fullscreen", True)
+    
+    # Obtenir la taille réelle de l'écran
+    screen_width = conf.fenetre.winfo_screenwidth()
+    screen_height = conf.fenetre.winfo_screenheight()
+
+    # Simuler plein écran sans déborder
+    conf.fenetre.geometry(f"{screen_width}x{screen_height}+0+0")
+    conf.fenetre.overrideredirect(True)  # Retire la barre de titre
+    conf.fenetre.attributes("-topmost", True)  # Toujours au-dessus
+
     conf.fenetre.title("radio reveil")
     conf.fenetre.configure(bg="#222831")
 
-    conf.label_hour = tk.Label(conf.fenetre, text=curent_hour(), font=("Arial", 40, "bold"), bg="#222831", fg="#FFD369")
+    conf.label_hour = tk.Label(
+        conf.fenetre, text=curent_hour(), font=("Arial", 40, "bold"),
+        bg="#222831", fg="#FFD369"
+    )
     conf.label_hour.pack(fill="both", expand=True)
     conf.label_hour.bind("<Button-1>", lambda event: settings())
+    
     update_label()
     conf.fenetre.bind("<Configure>", resize_label)
     conf.fenetre.mainloop()
+
 
 def settings():
     conf.fenetre3 = ctk.CTkToplevel(conf.fenetre)
