@@ -101,18 +101,32 @@ def settings():
 
 def alarm_picker():
     conf.fenetre2 = tk.Toplevel(conf.fenetre)
-    time_picker = AnalogPicker(conf.fenetre2)
+    conf.fenetre2.title("Sélecteur d'heure")
+
+    # Crée un conteneur pour centrer proprement l'AnalogPicker
+    frame_picker = tk.Frame(conf.fenetre2)
+    frame_picker.pack(padx=10, pady=10)
+
+    time_picker = AnalogPicker(frame_picker)
     conf.time_picker = time_picker
-    time_picker.place(relx=0.5, rely=0.5, anchor="center", width=300, height=300)
+    time_picker.pack()
+
     theme = AnalogThemes(time_picker)
     theme.setDracula()
+
     # Ajout d'un label pour afficher le résultat
     label_resultat = tk.Label(conf.fenetre2, text="")
     conf.label_resultat = label_resultat
     label_resultat.pack(pady=10)
+
     # Ajout d'un bouton pour valider la saisie
     bouton = tk.Button(conf.fenetre2, text="Valider", command=recuperer_saisie)
     bouton.pack(pady=5)
+
+    # Mise à jour des dimensions de la fenêtre après ajout des widgets
+    conf.fenetre2.update_idletasks()
+    conf.fenetre2.geometry(f"{conf.fenetre2.winfo_reqwidth()}x{conf.fenetre2.winfo_reqheight()}")
+    conf.fenetre2.resizable(False, False)
 
 
 
