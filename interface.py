@@ -13,7 +13,7 @@ ctk.set_appearance_mode("dark")  # "light" ou "dark"
 ctk.set_default_color_theme("blue")  # "green", "dark-blue"
 def recuperer_saisie():
     alarm_hour = str(conf.time_picker.time())
-    conf.label_resultat.config(text=f"Vous avez saisi : {alarm_hour}")
+    conf.label_resultat.configure(text=f"Vous avez saisi : {alarm_hour}")
     print(alarm_hour)
 
     alarm_hour = alarm_hour.strip("()").replace("'", "")
