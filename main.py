@@ -56,29 +56,19 @@ class SettingsScreen(Screen):
 
         # Bouton pour revenir à l'écran principal
         back_button = Button(text="Retour à l'écran principal", on_press=self.go_back, size_hint=(1, 0.2))
-        with back_button.canvas.before:
-            Color(1, 0, 0, 0.5)  # Rouge semi-transparent
-            self.rect = Rectangle(size=back_button.size, pos=back_button.pos)
         layout.add_widget(back_button)
 
         # Bouton pour arrêter l'alarme
         stop_alarm_button = Button(text="Arrêter l'alarme", on_press=self.stop_alarm, size_hint=(1, 0.2))
-        with stop_alarm_button.canvas.before:
-            Color(0, 1, 0, 0.5)  # Vert semi-transparent
-            self.rect = Rectangle(size=stop_alarm_button.size, pos=stop_alarm_button.pos)
         layout.add_widget(stop_alarm_button)
 
         # Bouton pour régler l'alarme
         set_alarm_button = Button(text="Régler l'alarme", on_press=self.set_alarm, size_hint=(1, 0.2))
-        with set_alarm_button.canvas.before:
-            Color(0, 0, 1, 0.5)  # Bleu semi-transparent
-            self.rect = Rectangle(size=set_alarm_button.size, pos=set_alarm_button.pos)
         layout.add_widget(set_alarm_button)
 
     def on_touch_down(self, touch):
         # Inverser l'axe Y
         touch.y = self.height - touch.y
-        print(f"Inverted touch position: {touch.pos}")
         return super().on_touch_down(touch)
     
     def go_back(self, instance):
