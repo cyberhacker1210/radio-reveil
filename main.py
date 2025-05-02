@@ -13,7 +13,9 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from back import play_alarm_sound, stop_alarm_sound
 from datetime import datetime
+from kivy.animation import Animation
 from kivy.graphics import Color, Rectangle
+from random import uniform
 
 
 # Définition de l'écran principal
@@ -22,29 +24,74 @@ class MainScreen(Screen):
         super().__init__(**kwargs)
         # Définir l'heure initiale et afficher sur le label
         self.time_label = Label(
-            text="00:00",
-            font_size='100sp',
-            size_hint=(1, 0.7),
-            pos_hint={"center_x": 0.5, "center_y": 0.5}
+            text="00:00:00",
+            font_size=100,
+            size_hint=(None, None),  # Taille fixe pour faciliter le calcul des collisions
+            size=(200, 100),  # Taille du label
+            pos=(self.width / 2, self.height / 2),  # Position initiale
+            color=(1, 1, 1, 1)  # Couleur initiale (blanc)
         )
         self.add_widget(self.time_label)
-        self.time_label.bind(on_touch_down=self.on_time_label_touch)
-        Clock.schedule_interval(self.update_time, 1)  # Mettre à jour l'heure toutes les secondes
 
-    def on_time_label_touch(self, instance, touch):
-        """Vérifie si le touché est sur le label et ouvre les paramètres si c'est le cas"""
-        if instance.collide_point(touch.x, touch.y):
-            self.open_settings()
+        # Variables pour la direction du mouvement
+        self.dx = 5  # Vitesse horizontale
+        self.dy = 5  # Vitesse verticale
+
+        # Mettre à jour l'heure toutes les secondes
+        Clock.schedule_interval(self.update_time, 1)
+
+        # Lancer l'animation de rebond
+        Clock.schedule_interval(self.animate_bounce, 1 / 60)  # 60 FPS
+
+        # Lancer l'animation de changement de couleur
+        self.animate_color()
+
+    def on_touch_down(self, touch):
+        """Gère les clics sur le label"""
+        if self.time_label.collide_point(touch.x, touch.y):
+            print("Label cliqué !")
+            # Changer l'écran actif vers 'settings'
+            self.manager.current = 'settings'
+        return super().on_touch_down(touch)
+
+    def animate_bounce(self, dt):
+        """Déplace le label et gère les rebonds sur les bords de l'écran"""
+        # Mettre à jour la position
+        new_x = self.time_label.x + self.dx
+        new_y = self.time_label.y + self.dy
+
+        # Vérifier les collisions avec les bords de l'écran
+        if new_x <= 0 or new_x + self.time_label.width >= self.width:
+            self.dx *= -1  # Inverser la direction horizontale
+        if new_y <= 0 or new_y + self.time_label.height >= self.height:
+            self.dy *= -1  # Inverser la direction verticale
+
+        # Appliquer la nouvelle position
+        self.time_label.x += self.dx
+        self.time_label.y += self.dy
+
+    def animate_color(self):
+        """Change la couleur du texte de manière fluide"""
+        # Générer une nouvelle couleur pastel
+        new_r = uniform(0.7, 1.0)
+        new_g = uniform(0.7, 1.0)
+        new_b = uniform(0.7, 1.0)
+
+        # Créer une animation pour changer la couleur
+        anim = Animation(duration=2)  # Durée de 2 secondes
+        anim.bind(on_progress=lambda *args: self.update_label_color(new_r, new_g, new_b))
+        anim.bind(on_complete=lambda *args: self.animate_color())  # Relancer l'animation
+        anim.start(self)
+
+    def update_label_color(self, r, g, b):
+        """Met à jour la couleur du texte"""
+        self.time_label.color = (r, g, b, 1)
 
     def update_time(self, dt):
         """Met à jour l'heure à chaque seconde"""
         from datetime import datetime
         current_time = datetime.now().strftime('%H:%M:%S')
         self.time_label.text = current_time
-
-    def open_settings(self):
-        """Ouvre la fenêtre des paramètres"""
-        self.manager.current = 'settings'
 
 
 # Définition de l'écran des paramètres
