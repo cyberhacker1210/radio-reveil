@@ -1,0 +1,41 @@
+<MainScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        Button:
+            text: root.current_time
+            font_size: 50
+            on_press: app.root.current = "settings"
+
+<SettingsScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        Button:
+            text: "Configurer une alarme"
+            on_press: app.root.current = "alarm_config"
+        Button:
+            text: "Arrêter le son"
+            on_press: root.stop_sound()
+
+        Button:
+            text: "Retour"
+            on_press: app.root.current = "main"
+
+<AlarmConfigScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        spacing: 10
+        Spinner:
+            id: hour_spinner
+            text: "07"
+            values: [f"{i:02d}" for i in range(1, 13)]
+        Spinner:
+            id: minute_spinner
+            text: "30"
+            values: [f"{i:02d}" for i in range(0, 60)]
+        Spinner:
+            id: ampm_spinner
+            text: "AM"
+            values: ["AM", "PM"]
+        Button:
+            text: "Valider l'alarme"
+            on_press: root.set_alarm()
