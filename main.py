@@ -76,7 +76,9 @@ class SettingsScreen(Screen):
         layout.add_widget(set_alarm_button)
 
     def on_touch_down(self, touch):
-        print(f"Touch position: {touch.pos}")
+        # Inverser l'axe Y
+        touch.y = self.height - touch.y
+        print(f"Inverted touch position: {touch.pos}")
         return super().on_touch_down(touch)
     
     def go_back(self, instance):
