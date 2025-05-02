@@ -1,7 +1,5 @@
 from kivy.config import Config
-Config.set('graphics', 'width', '800')  # Largeur de la fenêtre
-Config.set('graphics', 'height', '480')  # Hauteur de la fenêtre
-Config.set('graphics', 'resizable', False)  # Désactiver le redimensionnement
+Config.set('graphics', 'fullscreen', 'auto') 
 
 from kivy.app import App
 from kivy.uix.screenmanager import Screen, ScreenManager
