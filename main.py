@@ -39,7 +39,7 @@ class MainScreen(Screen):
     def update_time(self, dt):
         """Met à jour l'heure à chaque seconde"""
         from datetime import datetime
-        current_time = datetime.now().strftime('%H:%M')
+        current_time = datetime.now().strftime('%H:%M:%S')
         self.time_label.text = current_time
 
     def open_settings(self):
