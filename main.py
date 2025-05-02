@@ -1,3 +1,8 @@
+from kivy.config import Config
+Config.set('graphics', 'width', '800')  # Largeur de la fenêtre
+Config.set('graphics', 'height', '480')  # Hauteur de la fenêtre
+Config.set('graphics', 'resizable', False)  # Désactiver le redimensionnement
+
 from kivy.app import App
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.lang import Builder
@@ -8,6 +13,8 @@ from kivy.uix.popup import Popup
 from kivy.uix.slider import Slider
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from back import play_alarm_sound, stop_alarm_sound
+from datetime import datetime
 
 
 # Définition de l'écran principal
@@ -17,7 +24,7 @@ class MainScreen(Screen):
         # Définir l'heure initiale et afficher sur le label
         self.time_label = Label(
             text="00:00",
-            font_size='60sp',
+            font_size='300sp',
             size_hint=(1, 0.7),
             pos_hint={"center_x": 0.5, "center_y": 0.5}
         )
@@ -69,6 +76,7 @@ class SettingsScreen(Screen):
 
     def stop_alarm(self, instance):
         print("Arrêter l'alarme")
+        stop_alarm_sound()
         # Ajouter la logique pour arrêter l'alarme
 
     def set_alarm(self, instance):
@@ -79,16 +87,20 @@ class SettingsScreen(Screen):
         """Ouvre le Time Picker sous forme d'horloge"""
         content = BoxLayout(orientation="vertical", padding=20, spacing=20)
 
+        # Créer des labels locaux pour l'heure et les minutes
+        hour_label = Label(text="Heure: 08", size_hint=(1, 0.2))
+        minute_label = Label(text="Minute: 00", size_hint=(1, 0.2))
+
         # Ajouter un slider pour l'heure
         self.hour_slider = Slider(min=0, max=23, value=8, step=1)
-        self.hour_slider.bind(value=self.update_hour_label)
-        content.add_widget(self.hour_label)
+        self.hour_slider.bind(value=lambda instance, value: hour_label.setter('text')(hour_label, f"Heure: {int(value):02}"))
+        content.add_widget(hour_label)
         content.add_widget(self.hour_slider)
 
         # Ajouter un slider pour les minutes
         self.minute_slider = Slider(min=0, max=59, value=0, step=1)
-        self.minute_slider.bind(value=self.update_minute_label)
-        content.add_widget(self.minute_label)
+        self.minute_slider.bind(value=lambda instance, value: minute_label.setter('text')(minute_label, f"Minute: {int(value):02}"))
+        content.add_widget(minute_label)
         content.add_widget(self.minute_slider)
 
         # Ajouter un bouton pour confirmer le réglage de l'alarme
@@ -106,6 +118,17 @@ class SettingsScreen(Screen):
     def update_minute_label(self, instance, value):
         """Met à jour les minutes affichées"""
         self.minute_label.text = f"Minute: {int(value):02}"
+    
+    def check_alarm_time(self, dt):
+        """Vérifie si l'heure actuelle correspond à l'heure de l'alarme"""
+        
+        current_time = datetime.now().strftime('%H:%M')
+        alarm_time = f"{int(self.hour_slider.value):02}:{int(self.minute_slider.value):02}"
+        if current_time == alarm_time:
+            play_alarm_sound()
+            print("Alarme déclenchée!")
+            # Ajouter la logique pour déclencher l'alarme
+            return False
 
     def set_alarm_time(self, instance):
         """Confirme l'heure de l'alarme et ferme le Time Picker"""
@@ -113,6 +136,7 @@ class SettingsScreen(Screen):
         minute = int(self.minute_slider.value)
         print(f"Alarme réglée à {hour:02}:{minute:02}")
         self.popup.dismiss()
+        Clock.schedule_interval(self.check_alarm_time, 1)
 
 
 # Définition de l'application
