@@ -75,7 +75,6 @@ class SettingsScreen(Screen):
         self.manager.current = 'main'
 
     def stop_alarm(self, instance):
-        print("Arrêter l'alarme")
         stop_alarm_sound()
         # Ajouter la logique pour arrêter l'alarme
 
@@ -126,7 +125,6 @@ class SettingsScreen(Screen):
         alarm_time = f"{int(self.hour_slider.value):02}:{int(self.minute_slider.value):02}"
         if current_time == alarm_time:
             play_alarm_sound()
-            print("Alarme déclenchée!")
             # Ajouter la logique pour déclencher l'alarme
             return False
 
