@@ -22,7 +22,7 @@ class MainScreen(Screen):
         # Définir l'heure initiale et afficher sur le label
         self.time_label = Label(
             text="00:00",
-            font_size='300sp',
+            font_size='100sp',
             size_hint=(1, 0.7),
             pos_hint={"center_x": 0.5, "center_y": 0.5}
         )
@@ -54,15 +54,15 @@ class SettingsScreen(Screen):
         self.add_widget(layout)
 
         # Bouton pour revenir à l'écran principal
-        back_button = Button(text="Retour à l'écran principal", on_press=self.go_back)
+        back_button = Button(text="Retour à l'écran principal", on_press=self.go_back, size_hint=(1, 0.2))
         layout.add_widget(back_button)
 
         # Bouton pour arrêter l'alarme
-        stop_alarm_button = Button(text="Arrêter l'alarme", on_press=self.stop_alarm)
+        stop_alarm_button = Button(text="Arrêter l'alarme", on_press=self.stop_alarm, size_hint=(1, 0.2))
         layout.add_widget(stop_alarm_button)
 
         # Bouton pour régler l'alarme
-        set_alarm_button = Button(text="Régler l'alarme", on_press=self.set_alarm)
+        set_alarm_button = Button(text="Régler l'alarme", on_press=self.set_alarm, size_hint=(1, 0.2))
         layout.add_widget(set_alarm_button)
 
         # Créer les labels pour afficher l'heure et les minutes (initialisation correcte ici)
