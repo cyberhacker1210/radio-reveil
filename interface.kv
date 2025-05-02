@@ -1,41 +1,94 @@
+ScreenManager:
+    MainScreen:
+    SettingsScreen:
+    SetAlarmScreen:
+
 <MainScreen>:
+    name: 'main'
     BoxLayout:
-        orientation: "vertical"
-        Button:
-            text: root.current_time
-            font_size: 50
-            on_press: app.root.current = "settings"
+        orientation: 'vertical'
+        padding: 10
+        spacing: 10
+
+        Label:
+            id: time_label
+            font_size: '60sp'
+            size_hint_y: 0.7
+            text: "00:00"
+            on_touch_down: root.on_time_label_touch(*args)
+
+
 
 <SettingsScreen>:
+    name: 'settings'
     BoxLayout:
-        orientation: "vertical"
+        orientation: 'vertical'
+        padding: 10
+        spacing: 10
+
         Button:
-            text: "Configurer une alarme"
-            on_press: app.root.current = "alarm_config"
+            text: "Retour à l'accueil"
+            on_press: root.back_to_main()
+
         Button:
-            text: "Arrêter le son"
-            on_press: root.stop_sound()
+            text: "Arrêter l'alarme"
+            on_press: root.stop_alarm()
+
+        Button:
+            text: "Régler l'alarme"
+            on_press: root.goto_set_alarm()
+
+<SetAlarmScreen>:
+    name: 'set_alarm'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 10
+        spacing: 10
+
+        Label:
+            text: "Réglez l'alarme"
+            size_hint_y: 0.1
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.3
+            Label:
+                id: hour_label
+                text: "Hour: 00"
+                size_hint_x: 0.3
+            Slider:
+                id: hour_slider
+                min: 0
+                max: 23
+                value: 0
+                orientation: 'horizontal'
+                size_hint_x: 0.7
+            Label:
+                text: "Heure"
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.3
+            Label:
+                id: minute_label
+                text: "Minute: 00"
+                size_hint_x: 0.3
+            Slider:
+                id: minute_slider
+                min: 0
+                max: 59
+                value: 0
+                orientation: 'horizontal'
+                size_hint_x: 0.7
+            Label:
+                text: "Minute"
+
+        Button:
+            text: "Valider"
+            size_hint_y: 0.2
+            on_press: root.set_alarm()
 
         Button:
             text: "Retour"
-            on_press: app.root.current = "main"
-
-<AlarmConfigScreen>:
-    BoxLayout:
-        orientation: "vertical"
-        spacing: 10
-        Spinner:
-            id: hour_spinner
-            text: "07"
-            values: [f"{i:02d}" for i in range(1, 13)]
-        Spinner:
-            id: minute_spinner
-            text: "30"
-            values: [f"{i:02d}" for i in range(0, 60)]
-        Spinner:
-            id: ampm_spinner
-            text: "AM"
-            values: ["AM", "PM"]
-        Button:
-            text: "Valider l'alarme"
-            on_press: root.set_alarm()
+            size_hint_y: 0.2
+            on_press: root.back_to_settings()

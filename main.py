@@ -1,95 +1,130 @@
 from kivy.app import App
+from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
 from kivy.uix.label import Label
-from kivy.config import Config
+from kivy.uix.button import Button
 from kivy.uix.popup import Popup
-from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.slider import Slider
-from kivy.uix.switch import Switch
+from kivy.uix.widget import Widget
+from kivy.clock import Clock
 
-# Définir la taille de la fenêtre pour s'adapter à l'écran 3.5"
-Config.set('graphics', 'width', '480')  # largeur de l'écran
-Config.set('graphics', 'height', '320')  # hauteur de l'écran
-Config.set('graphics', 'resizable', '0')  # Désactiver la redimension de la fenêtre
 
-class MainApp(App):
-    def build(self):
-        # Utilisation d'un FloatLayout pour un agencement plus flexible
-        layout = FloatLayout()
-
-        # Création d'un bouton "Réveil"
-        wake_up_button = Button(
-            text="Réveil",
-            size_hint=(None, None),
-            size=(200, 50),
-            pos_hint={'center_x': 0.5, 'center_y': 0.7}
+# Définition de l'écran principal
+class MainScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Définir l'heure initiale et afficher sur le label
+        self.time_label = Label(
+            text="00:00",
+            font_size='60sp',
+            size_hint=(1, 0.7),
+            pos_hint={"center_x": 0.5, "center_y": 0.5}
         )
-        wake_up_button.bind(on_press=self.show_alarm_popup)
-        layout.add_widget(wake_up_button)
+        self.add_widget(self.time_label)
+        self.time_label.bind(on_touch_down=self.on_time_label_touch)
+        Clock.schedule_interval(self.update_time, 1)  # Mettre à jour l'heure toutes les secondes
 
-        # Création d'un bouton "Paramètres"
-        settings_button = Button(
-            text="Paramètres",
-            size_hint=(None, None),
-            size=(200, 50),
-            pos_hint={'center_x': 0.5, 'center_y': 0.3}
-        )
-        settings_button.bind(on_press=self.show_settings_popup)
-        layout.add_widget(settings_button)
+    def on_time_label_touch(self, instance, touch):
+        """Vérifie si le touché est sur le label et ouvre les paramètres si c'est le cas"""
+        if instance.collide_point(touch.x, touch.y):
+            self.open_settings()
 
-        return layout
+    def update_time(self, dt):
+        """Met à jour l'heure à chaque seconde"""
+        from datetime import datetime
+        current_time = datetime.now().strftime('%H:%M')
+        self.time_label.text = current_time
 
-    def show_alarm_popup(self, instance):
-        # Popup simple pour l'alarme
-        popup_content = BoxLayout(orientation='vertical')
-        popup_content.add_widget(Label(text="Réveil activé!"))
+    def open_settings(self):
+        """Ouvre la fenêtre des paramètres"""
+        self.manager.current = 'settings'
 
-        close_button = Button(text="Fermer")
-        close_button.bind(on_press=lambda x: self.close_popup())
-        popup_content.add_widget(close_button)
 
-        self.popup = Popup(
-            title="Réveil",
-            content=popup_content,
-            size_hint=(None, None),
-            size=(300, 200)
-        )
+# Définition de l'écran des paramètres
+class SettingsScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        layout = BoxLayout(orientation="vertical", padding=20, spacing=20)
+        self.add_widget(layout)
+
+        # Bouton pour revenir à l'écran principal
+        back_button = Button(text="Retour à l'écran principal", on_press=self.go_back)
+        layout.add_widget(back_button)
+
+        # Bouton pour arrêter l'alarme
+        stop_alarm_button = Button(text="Arrêter l'alarme", on_press=self.stop_alarm)
+        layout.add_widget(stop_alarm_button)
+
+        # Bouton pour régler l'alarme
+        set_alarm_button = Button(text="Régler l'alarme", on_press=self.set_alarm)
+        layout.add_widget(set_alarm_button)
+
+        # Créer les labels pour afficher l'heure et les minutes (initialisation correcte ici)
+        self.hour_label = Label(text="Heure: 08", size_hint=(1, 0.2))
+        self.minute_label = Label(text="Minute: 00", size_hint=(1, 0.2))
+
+    def go_back(self, instance):
+        self.manager.current = 'main'
+
+    def stop_alarm(self, instance):
+        print("Arrêter l'alarme")
+        # Ajouter la logique pour arrêter l'alarme
+
+    def set_alarm(self, instance):
+        # Ouvrir la fenêtre de réglage de l'alarme
+        self.open_alarm_picker()
+
+    def open_alarm_picker(self):
+        """Ouvre le Time Picker sous forme d'horloge"""
+        content = BoxLayout(orientation="vertical", padding=20, spacing=20)
+
+        # Ajouter un slider pour l'heure
+        self.hour_slider = Slider(min=0, max=23, value=8, step=1)
+        self.hour_slider.bind(value=self.update_hour_label)
+        content.add_widget(self.hour_label)
+        content.add_widget(self.hour_slider)
+
+        # Ajouter un slider pour les minutes
+        self.minute_slider = Slider(min=0, max=59, value=0, step=1)
+        self.minute_slider.bind(value=self.update_minute_label)
+        content.add_widget(self.minute_label)
+        content.add_widget(self.minute_slider)
+
+        # Ajouter un bouton pour confirmer le réglage de l'alarme
+        confirm_button = Button(text="Confirmer", on_press=self.set_alarm_time)
+        content.add_widget(confirm_button)
+
+        # Créer la popup
+        self.popup = Popup(title="Réglage de l'alarme", content=content, size_hint=(0.8, 0.8))
         self.popup.open()
 
-    def show_settings_popup(self, instance):
-        # Popup pour afficher les paramètres
-        popup_content = BoxLayout(orientation='vertical')
+    def update_hour_label(self, instance, value):
+        """Met à jour l'heure affichée"""
+        self.hour_label.text = f"Heure: {int(value):02}"
 
-        # Ajouter un slider pour ajuster l'heure de l'alarme
-        time_slider = Slider(min=0, max=24, value=8)
-        time_slider.bind(value=self.on_slider_value_change)
-        popup_content.add_widget(Label(text="Réglage Heure"))
-        popup_content.add_widget(time_slider)
+    def update_minute_label(self, instance, value):
+        """Met à jour les minutes affichées"""
+        self.minute_label.text = f"Minute: {int(value):02}"
 
-        # Ajouter un switch pour activer/désactiver l'alarme
-        alarm_switch = Switch(active=True)
-        popup_content.add_widget(Label(text="Activer Alarme"))
-        popup_content.add_widget(alarm_switch)
-
-        close_button = Button(text="Fermer")
-        close_button.bind(on_press=lambda x: self.close_popup())
-        popup_content.add_widget(close_button)
-
-        self.popup = Popup(
-            title="Paramètres",
-            content=popup_content,
-            size_hint=(None, None),
-            size=(300, 300)
-        )
-        self.popup.open()
-
-    def on_slider_value_change(self, instance, value):
-        # Gérer le changement de valeur du slider
-        print(f"Heure de l'alarme réglée à {value}h")
-
-    def close_popup(self):
+    def set_alarm_time(self, instance):
+        """Confirme l'heure de l'alarme et ferme le Time Picker"""
+        hour = int(self.hour_slider.value)
+        minute = int(self.minute_slider.value)
+        print(f"Alarme réglée à {hour:02}:{minute:02}")
         self.popup.dismiss()
 
-if __name__ == "__main__":
-    MainApp().run()
+
+# Définition de l'application
+class ReveilApp(App):
+    def build(self):
+        # Création d'un gestionnaire d'écran
+        sm = ScreenManager()
+        sm.add_widget(MainScreen(name='main'))
+        sm.add_widget(SettingsScreen(name='settings'))
+        return sm
+
+
+# Lancer l'application
+if __name__ == '__main__':
+    ReveilApp().run()

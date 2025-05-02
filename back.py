@@ -2,18 +2,16 @@ from datetime import datetime
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
 
+alarm_time = None
 sound = None
 say_stop = False
 
 def current_hour():
     now = datetime.now()
-    return now.strftime("%I:%M:%p")  # exemple: "07:45:PM"
-
-def day():
-    return datetime.now().strftime("%d")
+    return now.strftime("%H:%M")
 
 def play_alarm_sound():
-    global sound, say_stop
+    global sound
     sound = SoundLoader.load("./reveil_sound.mp3")
     if sound:
         sound.loop = True
@@ -29,10 +27,13 @@ def stop_alarm_sound():
     say_stop = True
     print("Alarme arrêtée")
 
-def check_alarm(target_hour):
-    now = current_hour()
-    print(f"Vérification: {now} vs {target_hour}")
-    if now == target_hour and not say_stop:
+def check_alarm(current_time):
+    global alarm_time, say_stop
+    if alarm_time == current_time and not say_stop:
         play_alarm_sound()
-    else:
-        Clock.schedule_once(lambda dt: check_alarm(target_hour), 30)  # recheck dans 30 sec
+
+def set_alarm_time(hour, minute):
+    global alarm_time, say_stop
+    alarm_time = f"{int(hour):02}:{int(minute):02}"
+    say_stop = False
+    print(f"Alarme réglée pour: {alarm_time}")
