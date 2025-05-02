@@ -1,9 +1,5 @@
 from kivy.config import Config
-Config.set('graphics', 'fullscreen', 0)  # Désactiver le mode plein écran
-Config.set('graphics', 'width', '800')  # Largeur de la fenêtre
-Config.set('graphics', 'height', '480')  # Hauteur de la fenêtre
-#from kivy.config import Config
-#Config.set('graphics', 'fullscreen', 'auto') 
+Config.set('graphics', 'fullscreen', 'auto') 
 
 from kivy.app import App
 from kivy.uix.screenmanager import Screen, ScreenManager
@@ -73,6 +69,10 @@ class SettingsScreen(Screen):
         self.hour_label = Label(text="Heure: 08", size_hint=(1, 0.2))
         self.minute_label = Label(text="Minute: 00", size_hint=(1, 0.2))
 
+    def on_touch_down(self, touch):
+        print(f"Touch position: {touch.pos}")
+        return super().on_touch_down(touch)
+    
     def go_back(self, instance):
         self.manager.current = 'main'
 
