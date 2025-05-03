@@ -16,8 +16,19 @@ from datetime import datetime
 from kivy.animation import Animation
 from kivy.graphics import Color, Rectangle
 from random import uniform
+from kivymd.uix.pickers import MDTimePicker
+from kivymd.app import MDApp 
 
 
+class ReveilApp(MDApp):
+    def build(self):
+        self.theme_cls.theme_style = "Dark"  # ou "Light" selon ta préférence
+        self.theme_cls.primary_palette = "BlueGray"  # Couleur principale du thème
+
+        sm = ScreenManager()
+        sm.add_widget(MainScreen(name='main'))
+        sm.add_widget(SettingsScreen(name='settings'))
+        return sm
 # Définition de l'écran principal
 class MainScreen(Screen):
     def __init__(self, **kwargs):
@@ -126,8 +137,24 @@ class SettingsScreen(Screen):
         # Ajouter la logique pour arrêter l'alarme
 
     def set_alarm(self, instance):
-        # Ouvrir la fenêtre de réglage de l'alarme
-        self.open_alarm_picker()
+        time_picker = MDTimePicker()
+        time_picker.bind(on_save=self.on_time_confirmed)  # utiliser on_save
+        time_picker.open()
+
+    def on_time_confirmed(self, instance, time_obj):
+        hour = time_obj.hour
+        minute = time_obj.minute
+        print(f"Heure confirmée via MDTimePicker : {hour:02}:{minute:02}")
+
+        # Créer des sliders factices pour check_alarm_time
+        self.hour_slider = type('obj', (object,), {'value': hour})()
+        self.minute_slider = type('obj', (object,), {'value': minute})()
+
+        # Éviter la duplication : unschedule avant de schedule
+        Clock.unschedule(self.check_alarm_time)
+        Clock.schedule_interval(self.check_alarm_time, 1)
+
+
 
     def open_alarm_picker(self):
         """Ouvre le Time Picker sous forme d'horloge"""
@@ -183,15 +210,6 @@ class SettingsScreen(Screen):
         self.popup.dismiss()
         Clock.schedule_interval(self.check_alarm_time, 1)
 
-
-# Définition de l'application
-class ReveilApp(App):
-    def build(self):
-        # Création d'un gestionnaire d'écran
-        sm = ScreenManager()
-        sm.add_widget(MainScreen(name='main'))
-        sm.add_widget(SettingsScreen(name='settings'))
-        return sm
 
 
 # Lancer l'application
