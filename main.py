@@ -204,6 +204,9 @@ class SettingsScreen(Screen):
 
     def set_alarm_time(self, instance):
         """Confirme l'heure de l'alarme et ferme le Time Picker"""
+        if not isinstance(self.hour_slider, Slider) or not isinstance(self.minute_slider, Slider):
+            print("Erreur : Les sliders ne sont pas correctement initialisés.")
+            return
         hour = int(self.hour_slider.value)
         minute = int(self.minute_slider.value)
         print(f"Alarme réglée à {hour:02}:{minute:02}")
