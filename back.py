@@ -1,8 +1,6 @@
 from datetime import datetime
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
-import os
-os.environ["KIVY_AUDIO"] = "ffpyplayer"
 
 alarm_time = None
 sound = None
@@ -14,7 +12,7 @@ def current_hour():
 
 def play_alarm_sound():
     global sound
-    sound = SoundLoader.load("./reveil_sound.mp3")
+    sound = SoundLoader.load("reveil_sound.mp3")
     if sound:
         sound.loop = True
         sound.play()
