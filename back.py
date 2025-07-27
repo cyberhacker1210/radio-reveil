@@ -1,6 +1,8 @@
 from datetime import datetime
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader
+import os
+os.environ["KIVY_AUDIO"] = "ffpyplayer"
 
 alarm_time = None
 sound = None
