@@ -1,6 +1,7 @@
 from datetime import datetime
 from kivy.clock import Clock
-from kivy.core.audio import SoundLoader
+import pygame
+
 
 alarm_time = None
 sound = None
@@ -11,24 +12,16 @@ def current_hour():
     return now.strftime("%H:%M")
 
 def play_alarm_sound():
-    print("play alarm sound")
-    global sound
-    print("load le son")
-    sound = SoundLoader.load("./reveil_sound.mp3")
-    print("j arrive a load le son")
-    if sound:
-        sound.loop = True
-        sound.play()
-        print("Alarme en cours !")
+    print("play alarm sound (pygame)")
+    pygame.mixer.init()
+    pygame.mixer.music.load("reveil_sound.mp3")
+    pygame.mixer.music.play(-1)  # -1 pour boucle infinie
+    print("Alarme en cours !")
 
 def stop_alarm_sound():
-    global sound, say_stop
-    if sound:
-        sound.stop()
-        sound.unload()
-        sound = None
-    say_stop = True
-    print("Alarme arrêtée")
+    print("Alarme arrêtée (pygame)")
+    pygame.mixer.music.stop()
+    pygame.mixer.quit()
 
 def check_alarm(current_time):
     global alarm_time, say_stop
