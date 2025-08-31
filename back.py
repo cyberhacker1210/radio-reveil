@@ -11,6 +11,7 @@ def current_hour():
     return now.strftime("%H:%M")
 
 def play_alarm_sound():
+    print("play alarm sound")
     global sound
     print("load le son")
     sound = SoundLoader.load("reveil_sound.mp3")
