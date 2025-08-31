@@ -3,12 +3,12 @@ it work on every platform who's suporting python
 how to launch it :
 
 # step 1
-    clone the repo ;)
-    i hope you d'ont be block at this step
-    don't forget to import all the lib
+clone the repo ;)
+i hope you d'ont be block at this step
+don't forget to import all the lib
 
 # step 2
-    launch the code 
+launch the code 
 
 # tips for rpi 
 
