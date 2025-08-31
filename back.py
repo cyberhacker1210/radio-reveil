@@ -14,7 +14,7 @@ def play_alarm_sound():
     print("play alarm sound")
     global sound
     print("load le son")
-    sound = SoundLoader.load("reveil_sound.mp3")
+    sound = SoundLoader.load("./reveil_sound.mp3")
     print("j arrive a load le son")
     if sound:
         sound.loop = True
