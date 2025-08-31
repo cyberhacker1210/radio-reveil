@@ -198,6 +198,7 @@ class SettingsScreen(Screen):
         current_time = datetime.now().strftime('%H:%M')
         alarm_time = f"{int(self.hour_slider.value):02}:{int(self.minute_slider.value):02}"
         if current_time == alarm_time:
+            print("le son pose probleme ")
             play_alarm_sound()
             # Ajouter la logique pour déclencher l'alarme
             return False
