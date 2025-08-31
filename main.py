@@ -126,7 +126,7 @@ class SettingsScreen(Screen):
 
     def on_touch_down(self, touch):
         # Inverser l'axe Y
-        touch.y = self.height - touch.y
+        touch.y = touch.y
         return super().on_touch_down(touch)
     
     def go_back(self, instance):
